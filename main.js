@@ -1,30 +1,29 @@
 'use strict'
 
-require('dotenv').config()
-require('./server')
+import url      from 'url'
+import path     from 'path'
+import dotenv   from 'dotenv'
+import http     from './bootstrap/http'
+import electron, { app, BrowserWindow } from 'electron'
 
-const url   = require('url')
-const path  = require('path')
+dotenv.config()
 
-const electron = require('electron')
-
-const app = electron.app
-const BrowserWindow = electron.BrowserWindow
+http(() => use('Event').fire('Http.start'))
 
 let main_window
 
-app.on('ready', createWindow)
-.on('window-all-closed', quit)
-.on('activate',createWindow)
+app
+    .on('ready', setUp)
+    .on('activate', setUp)
+    .on('window-all-closed', quit)
 
-function createWindow () {
+function setUp () {
 
     if (main_window === null) return
 
     main_window = new BrowserWindow({width: 1200, height: 900})
 
     main_window.setMenu(null)
-
     main_window.loadURL(url.format({
         protocol: 'http',
         slashes: true,
@@ -32,12 +31,9 @@ function createWindow () {
         port: process.env.PORT
     }))
 
-    // Open the DevTools.
-    // main_window.webContents.openDevTools()
+    if (process.env.NODE_ENV === 'development') main_window.webContents.openDevTools()
 
-    main_window.on('closed', () => {
-        main_window = null
-    })
+    main_window.on('closed', () => main_window = null)
 }
 
 function quit () {

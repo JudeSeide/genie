@@ -58,7 +58,7 @@ module.exports = function (callback) {
 
       /*
       |--------------------------------------------------------------------------
-      | Load Middleware And Routes
+      | Load Http Middleware And Routes
       |--------------------------------------------------------------------------
       |
       | Middleware and Routes are required to oil up your HTTP server. Here we
@@ -73,12 +73,16 @@ module.exports = function (callback) {
       | Load Websocket Channels And Middleware
       |--------------------------------------------------------------------------
       |
-      | Websocket channels defination should be loaded before firing the Http
+      | Websocket channels definition should be loaded before firing the Http
       | server.
       |
+      | Adonis Websocket implementation does not work within electron
+      |
+      | use(Helpers.makeNameSpace('Ws', 'kernel'))
+      | use(Helpers.makeNameSpace('Ws', 'socket'))
+      |
       */
-    //   use(Helpers.makeNameSpace('Ws', 'kernel'))
-    //   use(Helpers.makeNameSpace('Ws', 'socket'))
+
 
       /*
       |--------------------------------------------------------------------------

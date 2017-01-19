@@ -1,16 +1,16 @@
 'use strict'
 
-import url      from 'url'
-import path     from 'path'
-import dotenv   from 'dotenv'
-import http     from './bootstrap/http'
+import url     from 'url'
+import path    from 'path'
+import http    from './bootstrap/http'
+import { env } from './bootstrap/helper'
 import electron, { app, BrowserWindow } from 'electron'
-
-dotenv.config()
 
 http(() => use('Event').fire('Http.start'))
 
 let main_window
+
+const app_env = env('NODE_ENV', 'production')
 
 app
     .on('ready', setUp)
@@ -27,11 +27,11 @@ function setUp () {
     main_window.loadURL(url.format({
         protocol: 'http',
         slashes: true,
-        hostname: process.env.HOST,
-        port: process.env.PORT
+        hostname: env('HOST', 'localhost'),
+        port: env('PORT', 80)
     }))
 
-    if (process.env.NODE_ENV === 'development') main_window.webContents.openDevTools()
+    if (app_env === 'development') main_window.webContents.openDevTools()
 
     main_window.on('closed', () => main_window = null)
 }
